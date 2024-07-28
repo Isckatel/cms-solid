@@ -55,36 +55,45 @@ class Page {
     }
 
     private getPlugin(name: string): IPlugin {
-      // TODO здесь нужно использовать DI для получения плагина по имени
-      switch (name) {
-        case 'hi1':
-            return new Plugin1()
-        case 'hi2':
-            return new Plugin2()
-        // ...
-        default:
-            throw new Error(`Plugin ${name} not found`)
+      //Получения плагина по имени с помощью DI
+      try {
+        return IoC.resolve(name,[])
+      } catch (error) {
+        throw new Error(`Plugin ${name} not found`)
       }
     }
 }
 
 class Plugin1 implements IPlugin {
     name = 'hi1'
+    world: string
+    constructor(world: string){
+        this.world = world
+    }
     async render(): Promise<string> {
       return new Promise((resolve, reject) => {
-        resolve("<p>Привет, мир!</p>")
+        resolve(`<p>Привет, ${this.world}!</p>`)
       })
     }
 }
 
 class Plugin2 implements IPlugin {
     name = 'hi2'
+    world: string
+    constructor(world: string){
+        this.world = world
+    }
     async render(): Promise<string> {
         return new Promise((resolve, reject) => {
-            resolve("<p>Привет, пользователь!</p>")
+            resolve(`<p>Пока, ${this.world}!</p>`)
         })
     }
 }
+
+const args1 = ['мир']
+IoC.resolve('IoC.Register', ['hi1', ()=> new Plugin1(args1[0])])
+const args2 = ['человек']
+IoC.resolve('IoC.Register', ['hi2', ()=> new Plugin2(args2[0])])
 
 const mainPage = new Page()
 const hi1 = new Component('hi1', {})
