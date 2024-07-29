@@ -1,0 +1,12 @@
+{
+    "plugins": [
+        {
+            "name": "hiworld",
+            "parametrs": ["планета"]
+        },
+        {
+            "name": "byeman",
+            "parametrs": ["мужчина"]
+        } 
+    ]
+}
