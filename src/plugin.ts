@@ -1,61 +1,77 @@
-import IoC from "./ioc";
+import IoC from "./ioc"
 
 export interface IPlugin {
     name: string
     render(): Promise<string>
 }
-//TODO возможно стоит убрать и просто плагины наследовать от интерфейса
-export class Plugin implements IPlugin {
-    name = 'plugin'
-    world: string
-    constructor(world: string) {
-        this.world = world
-    }
-    render(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            resolve(`<p>Привет, ${this.world}!</p>`)
-        })
-    }
-}
 
 type PluginObj = {
-    name: string;
-    parametrs: string[];
-};
+    name: string
+    parametrs: string[]
+}
 
 type PluginsData = {
-    plugins: PluginObj[];
-};
+    plugins: PluginObj[]
+}
 
 export class PluginManager {
-    static async loadPluginInfo(): Promise<PluginsData | any> { 
-        // TODO добавить обработку ошибок
-        const response = await fetch('plugin-registry.json');
-        const data = await response.json();
-        console.log(data.plugins);
-        return data; 
+    private static pluginsList: string[] = []
+
+    //Загрузка информации о плагине(имя, параметры) из источника (файл, сервер)
+    //TODO можно подумть над конфигурацией адреса источника
+    static async loadPluginInfo(): Promise<PluginsData | any> {
+        try {
+            const response = await fetch('plugin-registry.json')
+            if (!response.ok) {
+                throw new Error(`Ошибка загрузки: ${response.statusText}`)
+            }
+            const data = await response.json()
+            console.log(data.plugins)
+            return data 
+        } catch (error) {
+            console.error('Ошибка при загрузке информации о плагинах:', error)
+            throw error
+        }
     }
 
+    //Добавление плагина в IoC контейнер
     static async registerPlugins(plugins: PluginsData) {
         for (const plugin of plugins.plugins) {
             try {
-                const args = plugin.parametrs;
-                const pluginModule = await this.loadPlugin(plugin.name);
-                const pluginClass = pluginModule.default; // Предположим, что класс экспортируется по умолчанию
+                const args = plugin.parametrs
+                const pluginModule = await this.loadPlugin(plugin.name)
+                const pluginClass = pluginModule.default
 
-                IoC.resolve('IoC.Register', [plugin.name, () => new pluginClass(args[0])]);
+                IoC.resolve('IoC.Register', [plugin.name, () => new pluginClass(args[0])])
+                PluginManager.pluginsList.push(plugin.name)
+                console.log(`Плагин ${plugin.name} успешно зарегистрирован.`)
             } catch (error) {
-                throw new Error(`Plugin ${plugin.name} not found: ${error}`);
+                console.error(`Ошибка регистрации плагина ${plugin.name}: ${error}`)
             }
         }
     }
 
+    //Непосредственная динамическая загрузка классов плагина из файла
     static async loadPlugin(pluginName: string): Promise<{ default: new (...args: any[]) => IPlugin }> {
-        return await import(`./plugins/${pluginName}.ts`); 
+        try {
+            return await import(`./plugins/${pluginName}.ts`)
+        } catch (error) {
+            throw new Error(`Ошибка загрузки плагина ${pluginName}: ${error}`)
+        }
     }
 
+    //Загрузка всех плагинов о которых получена информация
     static async loadPlugins() {
-        const pluginInfo = await this.loadPluginInfo()
-        this.registerPlugins(pluginInfo);
+        try {
+            const pluginInfo = await this.loadPluginInfo()
+            await this.registerPlugins(pluginInfo)
+        } catch (error) {
+            console.error('Ошибка в процессе загрузки плагинов:', error)
+        }
+    }
+
+    //Получить имена загруженных плагинов
+    static getPluginsList() {
+        return PluginManager.pluginsList
     }
 }

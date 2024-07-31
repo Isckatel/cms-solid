@@ -1,9 +1,10 @@
-import {Plugin} from "../plugin"
+import {IPlugin} from "../plugin"
 
-export default class Byeman extends Plugin {
+export default class Byeman implements IPlugin {
     name = 'Byeman'
+    world: string
     constructor(world: string) {
-        super(world)
+        this.world = world
     }
     async render(): Promise<string> {
         return new Promise((resolve, reject) => {

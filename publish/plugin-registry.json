@@ -2,11 +2,11 @@
     "plugins": [
         {
             "name": "hiworld",
-            "parametrs": ["планета"]
+            "parametrs": ["мир"]
         },
         {
             "name": "byeman",
-            "parametrs": ["мужчина"]
+            "parametrs": ["человек"]
         } 
     ]
 }
