@@ -2,13 +2,13 @@ import {IPlugin} from "../plugin"
 
 export default class Hiworld implements IPlugin {
     name = 'Hiworld'
-    world: string
+    word: string
     constructor(world: string) {
-        this.world = world
+        this.word = world
     }
     async render(): Promise<string> {
         return new Promise((resolve, reject) => {
-            resolve(`<p>Привет, ${this.world}!</p>`)
+            resolve(`<p>Привет, ${this.word}!</p>`)
         })
     }
 }
