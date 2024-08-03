@@ -42,13 +42,4 @@ export class Page {
             });
         }
     }
-    //TODO пока не понял где лучше это делать
-    // private getPlugin(name: string): IPlugin {
-    //     // Получение плагина по имени с помощью DI
-    //     try {
-    //         return IoC.resolve(name, [])
-    //     } catch (error) {
-    //         throw new Error(`Plugin ${name} not found`)
-    //     }
-    // }
 }
