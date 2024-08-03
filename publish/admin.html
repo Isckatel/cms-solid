@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS</title>
+</head>
+<body>
+    <p>Внимание! Перед добавленем информации о новом плагине файл с плагинои должен быть размещен на сервере в нужной папке.</p>
+    <form id="plugin-form">
+        <input type="text" id="plugin-name" placeholder="Имя плагина" required>
+        <input type="text" id="plugin-param" placeholder="Параметр" required>
+        <button type="submit">Добавить информацию</button>
+    </form>
+    <script>
+        document.getElementById('plugin-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('plugin-name').value;
+            const param = document.getElementById('plugin-param').value;
+
+            const response = await fetch('/api/plugins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    plugins: [
+                        {
+                            name: name,
+                            parametrs: [param]
+                        }
+                    ]
+                })
+            });
+
+            if (response.ok) {
+                alert('Плагин успешно добавлен');
+            } else {
+                alert('Ошибка при добавлении плагина');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -18,19 +18,18 @@ export class PluginManager {
     private static pluginsList: string[] = []
 
     //Загрузка информации о плагине(имя, параметры) из источника (файл, сервер)
-    //TODO можно подумть над конфигурацией адреса источника
     static async loadPluginInfo(): Promise<PluginsData | any> {
         try {
-            const response = await fetch('plugin-registry.json')
+            const response = await fetch('/api/plugins');
             if (!response.ok) {
-                throw new Error(`Ошибка загрузки: ${response.statusText}`)
+                throw new Error(`Ошибка загрузки: ${response.statusText}`);
             }
-            const data = await response.json()
-            console.log(data.plugins)
-            return data 
+            const data = await response.json();
+            console.log(data.plugins);
+            return data;
         } catch (error) {
-            console.error('Ошибка при загрузке информации о плагинах:', error)
-            throw error
+            console.error('Ошибка при загрузке информации о плагинах:', error);
+            throw error;
         }
     }
 
