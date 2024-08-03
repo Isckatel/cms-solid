@@ -41,7 +41,7 @@ export class PluginManager {
                 const pluginModule = await this.loadPlugin(plugin.name)
                 const pluginClass = pluginModule.default
 
-                IoC.resolve('IoC.Register', [plugin.name, () => new pluginClass(args[0])])
+                IoC.resolve('IoC.Register', [plugin.name, () => new pluginClass(args)])
                 PluginManager.pluginsList.push(plugin.name)
                 console.log(`Плагин ${plugin.name} успешно зарегистрирован.`)
             } catch (error) {
