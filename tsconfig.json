@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2020", // Целевая версия JavaScript
+    "module": "es2020", // Используемая система модулей
+    "strict": true, // Включение строгой проверки
+    "outDir": "./publish", // Директория для выходных файлов
+    "rootDir": "./src", // Директория с исходными файлами
+    "esModuleInterop": true // Позволяет использовать ES модули с CommonJS
+  },
+  "include": ["src/**/*"], // Включенные файлы
+  "exclude": ["node_modules"] // Исключенные файлы
+}
