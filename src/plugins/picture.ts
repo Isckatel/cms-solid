@@ -1,7 +1,8 @@
 import {IPlugin} from "../plugin"
 
 export default class Picture implements IPlugin {
-    name = 'Picture'
+    name = 'picture'
+    parameterNames = ['URL адрес картинки']
     args = ['']
     constructor(args:string[]) {
         this.args = args

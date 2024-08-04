@@ -38,12 +38,13 @@ describe('PluginManager', () => {
         const mockPluginModule = {
             default: class {
                 name = 'Byeman';
-                world: string;
-                constructor(world: string) {
-                    this.world = world;
+                parameterNames = ['Текст']
+                args = ['']
+                constructor(args:string[]) {
+                    this.args = args
                 }
                 async render(): Promise<string> {
-                    return `<p>Пока, ${this.world}!</p>`;
+                    return `<p>Пока, ${this.args[0]}!</p>`;
                 }
             },
         };
@@ -68,12 +69,13 @@ describe('PluginManager', () => {
         const mockPluginModule = {
             default: class {
                 name = 'Byeman';
-                world: string;
-                constructor(world: string) {
-                    this.world = world;
+                parameterNames = ['Текст']
+                args = ['']
+                constructor(args:string[]) {
+                    this.args = args
                 }
                 async render(): Promise<string> {
-                    return `<p>Пока, ${this.world}!</p>`;
+                    return `<p>Пока, ${this.args[0]}!</p>`;
                 }
             },
         };

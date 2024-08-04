@@ -2,7 +2,10 @@ import path from 'path';
 
 const config = {
     mode: 'development', // Устанавливаем режим разработки
-    entry: './src/index.ts', // Укажите начальную точку вашего приложения
+    entry: {
+        index: './src/index.ts', // Начальная точка для основного приложения
+        admin: './src/admin.ts'  // Начальная точка для административной страницы
+    },
     module: {
         rules: [
             {
@@ -16,7 +19,7 @@ const config = {
         extensions: ['.ts', '.js'], // Разрешаем расширения .ts и .js
     },
     output: {
-        filename: 'index.js', // Имя выходного файла
+        filename: '[name].js', // Имя выходного файла будет зависеть от имени точки входа
         path: path.resolve(process.cwd(), 'publish'), // Папка для выходных файлов
     },
     devServer: {

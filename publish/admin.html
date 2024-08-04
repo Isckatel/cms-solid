@@ -4,19 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .tab {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background-color: #f1f1f1;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+        }
+        .tab-content {
+            border: 1px solid #ccc;
+            padding: 20px;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <p>Внимание! Перед добавленем информации о новом плагине файл с плагинои должен быть размещен на сервере в нужной папке.</p>
-    <form id="plugin-form">
-        <input type="text" id="plugin-name" placeholder="Имя плагина" required>
-        <input type="text" id="plugin-param" placeholder="Параметр" required>
-        <button type="submit">Добавить информацию</button>
-    </form>
+    <p>Настройка плагинов</p>
+    <div class="tabs">
+        <div class="tab active" data-tab="installed-plugins">Установленные плагины</div>
+        <div class="tab" data-tab="register-plugin">Регистрация плагина</div>
+    </div>
+    <div id="installed-plugins" class="tab-content active">
+        <h2>Установленные плагины</h2>
+        <div id="plugin-forms"></div>
+    </div>
+    <div id="register-plugin" class="tab-content">
+        <h2>Регистрация плагина</h2>
+        <form id="plugin-registry">
+            <label for="plugin-name">Название плагина:</label><br>
+            <input type="text" id="plugin-name" name="plugin-name"><br>
+            <button type="submit">Зарегистрировать</button>
+        </form>
+    </div>
+
     <script>
-        document.getElementById('plugin-form').addEventListener('submit', async (event) => {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+
+        document.getElementById('plugin-registry').addEventListener('submit', async (event) => {
             event.preventDefault();
             const name = document.getElementById('plugin-name').value;
-            const param = document.getElementById('plugin-param').value;
 
             const response = await fetch('/api/plugins', {
                 method: 'POST',
@@ -27,7 +76,7 @@
                     plugins: [
                         {
                             name: name,
-                            parametrs: [param]
+                            parametrs: ['']
                         }
                     ]
                 })
@@ -40,5 +89,6 @@
             }
         });
     </script>
+    <script type="module" src="admin.js"></script>
 </body>
 </html>

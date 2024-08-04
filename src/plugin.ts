@@ -2,15 +2,16 @@ import IoC from "./ioc"
 
 export interface IPlugin {
     name: string
+    parameterNames: string[]
     render(): Promise<string>
 }
 
-type PluginObj = {
+export type PluginObj = {
     name: string
     parametrs: string[]
 }
 
-type PluginsData = {
+export type PluginsData = {
     plugins: PluginObj[]
 }
 

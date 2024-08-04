@@ -1,7 +1,8 @@
 import {IPlugin} from "../plugin"
 
 export default class Text implements IPlugin {
-    name = 'Text'
+    name = 'text'
+    parameterNames = ['Текст', 'Ширина блока(800px)', 'Стлиль границы (2px solid #000)']
     args = ['']
     constructor(args:string[]) {
         this.args = args

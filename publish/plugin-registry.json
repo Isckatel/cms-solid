@@ -1,15 +1,18 @@
 {
-    "plugins": [
-        {
-            "name": "text",
-            "parametrs": [
-                "Съешь ещё этих мягких французских булок, да выпей чаю",
-                 "800px",
-                 "2px solid #000"]
-        },
-        {
-            "name": "picture",
-            "parametrs": ["https://egoshinweb.ru/img/galaxi.png"]
-        } 
-    ]
+  "plugins": [
+    {
+      "name": "text",
+      "parametrs": [
+        "Съешь ещё этих мягких французских булок, да выпей чаю",
+        "800px",
+        "2px solid #000"
+      ]
+    },
+    {
+      "name": "picture",
+      "parametrs": [
+        "https://egoshinweb.ru/img/galaxi.png"
+      ]
+    }
+  ]
 }
