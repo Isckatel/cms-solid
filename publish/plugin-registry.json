@@ -13,6 +13,14 @@
       "parametrs": [
         "https://egoshinweb.ru/img/galaxi.png"
       ]
+    },
+    {
+      "name": "text2",
+      "parametrs": [
+        "End",
+        "200px",
+        "2px solid #000"
+      ]
     }
   ]
 }

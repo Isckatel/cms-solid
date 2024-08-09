@@ -101,6 +101,45 @@ class AdminPage {
                 alert('Ошибка при сохранении параметров плагинов.');
             }
         });
+
+        const pluginNameInput = document.getElementById('plugin-name') as HTMLInputElement;
+        const registryButton = document.getElementById('registry-button') as HTMLButtonElement;
+
+        registryButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const pluginName = pluginNameInput.value;
+
+            if (!pluginName) {
+                alert('Введите имя плагина!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/registration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: pluginName }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(data.message);
+                    pluginNameInput.value = '';
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`Ошибка: ${errorData.error}`);
+                }
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    alert('Произошла ошибка при отправке запроса: ' + error.message);
+                } else {
+                    alert('Произошла неизвестная ошибка');
+                }
+            }
+        });
     }
 }
 

@@ -39,6 +39,46 @@ app.post('/api/plugins', (req, res) => {
     });
 });
 
+// Регистрация плагина
+app.post('/api/registration', (req, res) => {
+    const pluginName = req.body.name;
+
+    if (!pluginName) {
+        return res.status(400).json({ error: 'Имя плагина не указано' });
+    }
+
+    //Чтение файла
+    fs.readFile(PLUGIN_REGISTRY_PATH, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Ошибка чтения файла' });
+        }
+
+        let pluginsData;
+
+        try {
+            pluginsData = JSON.parse(data);
+        } catch (parseErr) {
+            return res.status(500).json({ error: 'Ошибка синтаксиса JSON' });
+        }
+
+        const newPlugin = {
+            name: pluginName,
+            parametrs: []
+        };
+
+        pluginsData.plugins.push(newPlugin);
+
+        // Запись
+        fs.writeFile(PLUGIN_REGISTRY_PATH, JSON.stringify(pluginsData, null, 2), 'utf8', (writeErr) => {
+            if (writeErr) {
+                return res.status(500).json({ error: 'Ошибка записи файла' });
+            }
+
+            res.json({ message: 'Плагин успешно добавлен' });
+        });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
