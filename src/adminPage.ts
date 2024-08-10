@@ -1,4 +1,4 @@
-import { IHttpService } from "./httpService"
+import { IHttpService, IApiResponse } from "./httpService"
 import IoC from "./ioc"
 import { IPlugin, PluginManager, PluginObj, PluginsData } from "./plugin"
 
@@ -91,11 +91,12 @@ export class AdminPage {
             })
 
             // Отправляем параметры на сервер
-            //TODO сообщение об успехе и удалить поле
-            this.httpService.post<any[]>('/api/plugins',{
+            this.httpService.post<any>('/api/plugins',{
                 plugins: pluginsParams
+            }).then((result: IApiResponse) => {
+                alert(result.message)
             })
-        });
+        })
 
         const pluginNameInput = document.getElementById('plugin-name') as HTMLInputElement
         const registryButton = document.getElementById('registry-button') as HTMLButtonElement
@@ -111,8 +112,11 @@ export class AdminPage {
             }
 
             // Отправляем параметры на сервер
-            //TODO сообщение об успехе и удалить поле
-            this.httpService.post<any[]>('/api/registration',{ name: pluginName })
+            this.httpService.post<any>('/api/registration',{ name: pluginName })
+                .then((result: IApiResponse) => {
+                    alert(result.message)
+                    pluginNameInput.value = ''
+                 })
         })
     }
 

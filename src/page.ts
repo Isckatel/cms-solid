@@ -22,7 +22,7 @@ export class Page {
     }
 
     async render(): Promise<void> {
-        const bodyElement = document.querySelector('body');
+        const bodyElement = document.querySelector('body')
         const parser = new DOMParser()
 
         for (const plugin of this.plugins) {
@@ -31,15 +31,15 @@ export class Page {
             // Выполняем команды, но не дожидаемся завершения
             command.execute().then(result => {
                 if (bodyElement) {
-                    const doc = parser.parseFromString(result, "text/html");
-                    const element = doc.body.firstChild;
+                    const doc = parser.parseFromString(result, "text/html")
+                    const element = doc.body.firstChild
                     if (element) {
-                        bodyElement.appendChild(element);
+                        bodyElement.appendChild(element)
                     } else {
-                        console.log("Нет контента в плагине или это не HTML-элемент");
+                        console.log("Нет контента в плагине или это не HTML-элемент")
                     }
                 }
-            });
+            })
         }
     }
 }

@@ -21,7 +21,7 @@ export class PluginManager {
     private static httpService: IHttpService 
 
     static init() {
-        PluginManager.httpService = IoC.resolve<IHttpService>('HttpService', []);
+        PluginManager.httpService = IoC.resolve<IHttpService>('HttpService', [])
     }
 
     //Загрузка информации о плагине(имя, параметры) из источника

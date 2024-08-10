@@ -1,15 +1,19 @@
 export interface IHttpService {
-    get<T>(url: string): Promise<T>;
-    post<T>(url: string, body: any): Promise<T>;
+    get<T>(url: string): Promise<T>
+    post<T>(url: string, body: any): Promise<T>
+}
+
+export interface IApiResponse {
+    message: string
 }
 
 export class HttpService implements IHttpService {
     async get<T>(url: string): Promise<T> {
-        const response = await fetch(url);
+        const response = await fetch(url)
         if (!response.ok) {
-            throw new Error(`GET запрос на ${url} не удалось со статусом ${response.status}`);
+            throw new Error(`GET запрос на ${url} не удалось со статусом ${response.status}`)
         }
-        return response.json();
+        return response.json()
     }
 
     async post<T>(url: string, body: any): Promise<T> {
@@ -23,6 +27,6 @@ export class HttpService implements IHttpService {
         if (!response.ok) {
             throw new Error(`POST запрос на ${url} не удалось со статусом ${response.status}`);
         }
-        return response.json();
+        return response.json()
     }
 }
