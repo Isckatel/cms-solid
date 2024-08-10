@@ -1,8 +1,13 @@
 import IoC from "./ioc"
 import { IPlugin, PluginManager } from "./plugin"
 import { Page } from "./page"
+import { HttpService } from "./httpService"
 
 async function main() {
+
+    // Регистрация HttpService
+    IoC.resolve('IoC.Register', ['HttpService', () => new HttpService()])
+    PluginManager.init()
 
     // Ждем загрузки плагинов
     await PluginManager.loadPlugins()

@@ -62,32 +62,6 @@
                 document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
             });
         });
-
-        document.getElementById('plugin-registry').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const name = document.getElementById('plugin-name').value;
-
-            const response = await fetch('/api/plugins', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    plugins: [
-                        {
-                            name: name,
-                            parametrs: ['']
-                        }
-                    ]
-                })
-            });
-
-            if (response.ok) {
-                alert('Плагин успешно добавлен');
-            } else {
-                alert('Ошибка при добавлении плагина');
-            }
-        });
     </script>
     <script type="module" src="admin.js"></script>
 </body>

@@ -1,4 +1,5 @@
 import IoC from "./ioc"
+import { IHttpService } from './httpService'
 
 export interface IPlugin {
     name: string
@@ -17,21 +18,16 @@ export type PluginsData = {
 
 export class PluginManager {
     private static pluginsList: string[] = []
+    private static httpService: IHttpService 
 
-    //Загрузка информации о плагине(имя, параметры) из источника (файл, сервер)
+    static init() {
+        PluginManager.httpService = IoC.resolve<IHttpService>('HttpService', []);
+    }
+
+    //Загрузка информации о плагине(имя, параметры) из источника
     static async loadPluginInfo(): Promise<PluginsData | any> {
-        try {
-            const response = await fetch('/api/plugins');
-            if (!response.ok) {
-                throw new Error(`Ошибка загрузки: ${response.statusText}`);
-            }
-            const data = await response.json();
-            console.log(data.plugins);
-            return data;
-        } catch (error) {
-            console.error('Ошибка при загрузке информации о плагинах:', error);
-            throw error;
-        }
+        const plugins = await this.httpService.get<any[]>('/api/plugins')
+        return plugins
     }
 
     //Добавление плагина в IoC контейнер
