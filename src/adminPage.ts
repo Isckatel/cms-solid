@@ -1,94 +1,94 @@
-import { IHttpService } from "./httpService";
-import IoC from "./ioc";
-import { IPlugin, PluginManager, PluginsData } from "./plugin";
+import { IHttpService } from "./httpService"
+import IoC from "./ioc"
+import { IPlugin, PluginManager, PluginObj, PluginsData } from "./plugin"
 
 export class AdminPage {
-    private httpService: IHttpService 
+    private httpService: IHttpService
+    private plugins: Array<IPlugin> = []
+    private pluginInfo: Array<PluginObj> = []
+
     constructor(httpService: IHttpService) {
         // Использование httpService
-        this.httpService = httpService;
+        this.httpService = httpService
     }
-    async render() {
-        // Ждем загрузки плагинов
-        await PluginManager.loadPlugins()
-        const pluginData: PluginsData = await PluginManager.loadPluginInfo()
-        const pluginInfo = pluginData.plugins
-        console.log(pluginInfo)
-        //Почить загруженные плагины
-        const pluginFormsContainer = document.getElementById('plugin-forms');
 
-        //Получаем плагины на страницу
-        let plugins: Array<IPlugin> = [];
-        const pluginsList: string[] = PluginManager.getPluginsList()
-        for (const pluginName of pluginsList) {
-            const plugin: IPlugin = IoC.resolve(pluginName, [])
-            plugins.push(plugin)
-        }
+    async render() {
+
+        await this.loadPlugins()
 
         // Создаем общую форму для всех плагинов
-        const form = document.createElement('form');
-        form.setAttribute('id', 'all-plugins-form');
+        const form = document.createElement('form')
+        form.setAttribute('id', 'all-plugins-form')
 
         // Создаем поля для параметров каждого плагина
-        for (const plugin of plugins) {
-            const pluginFieldset = document.createElement('fieldset');
-            pluginFieldset.setAttribute('id', `fieldset-${plugin.name}`);
-            pluginFieldset.setAttribute('data-plugin-name', plugin.name);
+        for (const plugin of this.plugins) {
+            const pluginFieldset = document.createElement('fieldset')
+            pluginFieldset.setAttribute('id', `fieldset-${plugin.name}`)
+            pluginFieldset.setAttribute('data-plugin-name', plugin.name)
 
-            const legend = document.createElement('legend');
-            legend.textContent = plugin.name;
-            pluginFieldset.appendChild(legend);
+            const legend = document.createElement('legend')
+            legend.textContent = plugin.name
+            pluginFieldset.appendChild(legend)
 
-            const obj = pluginInfo.find(itm => itm.name === plugin.name);
+            const obj = this.pluginInfo.find(itm => itm.name === plugin.name)
             plugin.parameterNames.forEach((paramName, indx) => {
-                const label = document.createElement('label');
-                label.setAttribute('for', paramName);
-                label.textContent = paramName;
+                const label = document.createElement('label')
+                label.setAttribute('for', paramName)
+                label.textContent = paramName
 
-                const input = document.createElement('input');
-                input.setAttribute('type', 'text');
-                input.setAttribute('id', paramName);
-                input.setAttribute('name', `${plugin.name}-${paramName}`);
+                const input = document.createElement('input')
+                input.setAttribute('type', 'text')
+                input.setAttribute('id', paramName)
+                input.setAttribute('name', `${plugin.name}-${paramName}`)
                 input.setAttribute('value', obj?.parametrs[indx] ?? '')
 
-                pluginFieldset.appendChild(label);
-                pluginFieldset.appendChild(input);
-                pluginFieldset.appendChild(document.createElement('br')); // Добавляем перенос строки
+                pluginFieldset.appendChild(label)
+                pluginFieldset.appendChild(input)
+                pluginFieldset.appendChild(document.createElement('br')) // Добавляем перенос строки
             });
 
-            form.appendChild(pluginFieldset);
+            form.appendChild(pluginFieldset)
         }
 
         // Добавляем кнопку для отправки формы
-        const submitButton = document.createElement('button');
-        submitButton.setAttribute('type', 'submit');
-        submitButton.textContent = 'Сохранить параметры всех плагинов';
+        const submitButton = document.createElement('button')
+        submitButton.setAttribute('type', 'submit')
+        submitButton.textContent = 'Сохранить параметры всех плагинов'
 
-        form.appendChild(submitButton);
+        const pluginFormsContainer = document.getElementById('plugin-forms')
+
+        form.appendChild(submitButton)
         if (!pluginFormsContainer) return
-        pluginFormsContainer.appendChild(form);
+        pluginFormsContainer.appendChild(form)
+        
+        this.addEvent()
+    }
 
+    //События обработки нажатия кнопок для отправки информации
+    private addEvent() {
+        const form = document.getElementById('all-plugins-form') as HTMLFormElement
+        if (!form) return
         // Обработчик события на отправку формы
         form.addEventListener('submit', async (event) => {
             event.preventDefault(); // Предотвращаем стандартное поведение формы
 
             // Собираем данные формы
             const formData = new FormData(form);
-            const pluginsParams: { name: string, parametrs: string[] }[] = [];
+            const pluginsParams: { name: string, parametrs: string[] }[] = []
 
-            plugins.forEach(plugin => {
+            this.plugins.forEach(plugin => {
                 const params: string[] = [];
                 plugin.parameterNames.forEach(paramName => {
-                    const value = formData.get(`${plugin.name}-${paramName}`);
+                    const value = formData.get(`${plugin.name}-${paramName}`)
                     if (value) {
                         params.push(value.toString());
                     }
-                });
+                })
                 pluginsParams.push({
                     name: plugin.name,
                     parametrs: params
-                });
-            });
+                })
+            })
 
             // Отправляем параметры на сервер
             //TODO сообщение об успехе и удалить поле
@@ -97,11 +97,11 @@ export class AdminPage {
             })
         });
 
-        const pluginNameInput = document.getElementById('plugin-name') as HTMLInputElement;
-        const registryButton = document.getElementById('registry-button') as HTMLButtonElement;
+        const pluginNameInput = document.getElementById('plugin-name') as HTMLInputElement
+        const registryButton = document.getElementById('registry-button') as HTMLButtonElement
 
         registryButton.addEventListener('click', async (event) => {
-            event.preventDefault();
+            event.preventDefault()
 
             const pluginName = pluginNameInput.value
 
@@ -113,6 +113,20 @@ export class AdminPage {
             // Отправляем параметры на сервер
             //TODO сообщение об успехе и удалить поле
             this.httpService.post<any[]>('/api/registration',{ name: pluginName })
-        });
+        })
+    }
+
+    private async loadPlugins() {
+        // Ждем загрузки плагинов
+        await PluginManager.loadPlugins()
+        const pluginData: PluginsData = await PluginManager.loadPluginInfo()
+        this.pluginInfo = pluginData.plugins
+
+        //Получаем плагины на страницу
+        const pluginsList: string[] = PluginManager.getPluginsList()
+        for (const pluginName of pluginsList) {
+            const plugin: IPlugin = IoC.resolve(pluginName, [])
+            this.plugins.push(plugin)
+        }
     }
 }

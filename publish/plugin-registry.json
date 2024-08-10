@@ -18,8 +18,8 @@
       "name": "text2",
       "parametrs": [
         "End",
-        "200px",
-        "2px solid #dedede"
+        "400px",
+        "2px solid #000"
       ]
     }
   ]
