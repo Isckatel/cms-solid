@@ -6,6 +6,7 @@ export default {
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
     "!src/**/*.d.ts",
+    "!src/plugins/**",
     "!**/node_modules/**"
   ],
 };
