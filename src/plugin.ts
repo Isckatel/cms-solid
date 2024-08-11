@@ -17,7 +17,7 @@ export type PluginsData = {
 }
 
 export class PluginManager {
-    private static pluginsList: string[] = []
+    private static pluginsNameList: string[] = []
     private static httpService: IHttpService 
 
     static init() {
@@ -39,7 +39,7 @@ export class PluginManager {
                 const pluginClass = pluginModule.default
 
                 IoC.resolve('IoC.Register', [plugin.name, () => new pluginClass(args)])
-                PluginManager.pluginsList.push(plugin.name)
+                PluginManager.pluginsNameList.push(plugin.name)
                 console.log(`Плагин ${plugin.name} успешно зарегистрирован.`)
             } catch (error) {
                 console.error(`Ошибка регистрации плагина ${plugin.name}: ${error}`)
@@ -68,6 +68,6 @@ export class PluginManager {
 
     //Получить имена загруженных плагинов
     static getPluginsList() {
-        return PluginManager.pluginsList
+        return PluginManager.pluginsNameList
     }
 }
