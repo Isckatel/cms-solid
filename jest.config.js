@@ -7,6 +7,9 @@ export default {
     "src/**/*.{ts,tsx}",
     "!src/**/*.d.ts",
     "!src/plugins/**",
+    "!src/index.ts",
+    "!src/admin.ts",
+    "!src/adminPage.ts",
     "!**/node_modules/**"
   ],
 };
