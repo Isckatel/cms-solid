@@ -67,7 +67,7 @@ export class PluginManager {
     }
 
     //Получить имена загруженных плагинов
-    static getPluginsList() {
+    static getPluginsNameList() {
         return PluginManager.pluginsNameList
     }
 }

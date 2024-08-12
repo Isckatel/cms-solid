@@ -70,7 +70,7 @@ export class AdminPage {
         if (!form) return
         // Обработчик события на отправку формы
         form.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Предотвращаем стандартное поведение формы
+            event.preventDefault()
 
             // Собираем данные формы
             const formData = new FormData(form);
@@ -81,7 +81,7 @@ export class AdminPage {
                 plugin.parameterNames.forEach(paramName => {
                     const value = formData.get(`${plugin.name}-${paramName}`)
                     if (value) {
-                        params.push(value.toString());
+                        params.push(value.toString())
                     }
                 })
                 pluginsParams.push({
@@ -127,8 +127,8 @@ export class AdminPage {
         this.pluginInfo = pluginData.plugins
 
         //Получаем плагины на страницу
-        const pluginsList: string[] = PluginManager.getPluginsList()
-        for (const pluginName of pluginsList) {
+        const pluginsNameList: string[] = PluginManager.getPluginsNameList()
+        for (const pluginName of pluginsNameList) {
             const plugin: IPlugin = IoC.resolve(pluginName, [])
             this.plugins.push(plugin)
         }

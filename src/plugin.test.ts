@@ -27,8 +27,8 @@ describe('PluginManager', () => {
         PluginManager.init();
     });
 
-    test('getPluginsList возвращает пустой массив, если плагины не загружены', () => {
-        const pluginsList = PluginManager.getPluginsList();
+    test('getPluginsNameList возвращает пустой массив, если плагины не загружены', () => {
+        const pluginsList = PluginManager.getPluginsNameList();
         expect(pluginsList).toEqual([]);
     });
 
@@ -77,7 +77,7 @@ describe('PluginManager', () => {
         await PluginManager.registerPlugins(pluginsData);
 
         expect(mockIoCRegister).toHaveBeenCalled();
-        expect(PluginManager.getPluginsList()).toContain('Byeman');
+        expect(PluginManager.getPluginsNameList()).toContain('Byeman');
     });
 
     test('loadPlugins загружает и регистрирует плагины', async () => {
@@ -112,6 +112,6 @@ describe('PluginManager', () => {
 
         expect(mockHttpService.get).toHaveBeenCalledWith('/api/plugins');
         expect(mockIoCRegister).toHaveBeenCalled();
-        expect(PluginManager.getPluginsList()).toContain('Byeman');
+        expect(PluginManager.getPluginsNameList()).toContain('Byeman');
     });
 });

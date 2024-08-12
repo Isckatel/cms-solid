@@ -14,8 +14,8 @@ async function main() {
     const mainPage = new Page()
 
     //Добавляем плагины на страницу
-    const pluginsList: string[] = PluginManager.getPluginsList()
-    for (const pluginName of pluginsList) {
+    const pluginsNameList: string[] = PluginManager.getPluginsNameList()
+    for (const pluginName of pluginsNameList) {
         const plugin: IPlugin = IoC.resolve(pluginName, [])
         mainPage.addPlugin(plugin)
     }
