@@ -36,7 +36,7 @@ describe('IoC', () => {
         ];
         IoC.resolve('IoC.Register', [pluginName, () => new MockText(args)]); // Регистрируем экземпляр
         
-        const instance = IoC.resolve(pluginName, []); // Разрешаем экземпляр
+        const instance = IoC.resolve(pluginName, []); 
         expect(instance).toBeInstanceOf(MockText); // Проверяем, что это экземпляр MockText
     });
 

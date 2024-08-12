@@ -11,7 +11,7 @@ export class HttpService implements IHttpService {
     async get<T>(url: string): Promise<T> {
         const response = await fetch(url)
         if (!response.ok) {
-            throw new Error(`GET запрос на ${url} не удалось со статусом ${response.status}`)
+            throw new Error(`GET запрос на ${url} не удался со статусом ${response.status}`)
         }
         return response.json()
     }
@@ -25,7 +25,7 @@ export class HttpService implements IHttpService {
             body: JSON.stringify(body),
         });
         if (!response.ok) {
-            throw new Error(`POST запрос на ${url} не удалось со статусом ${response.status}`);
+            throw new Error(`POST запрос на ${url} не удался со статусом ${response.status}`);
         }
         return response.json()
     }

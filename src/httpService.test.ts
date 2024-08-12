@@ -64,4 +64,35 @@ describe('HttpService', () => {
         });
         expect(response).toEqual(mockResponse);
     });
+
+    test('GET запрос возвращает ошибку', async () => {
+
+        // Мокаем fetch для возвращения тестовых данных
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                status: 500,
+            })
+        ) as jest.Mock;
+
+        const url = 'http://example.com/api/plugins';
+
+        // Ожидаем, что получим сообщение об ошибке
+        await expect(httpService.get(url)).rejects.toThrow(`GET запрос на ${url} не удался со статусом 500`);
+    });
+
+    test('POST запрос возвращает ошибку', async () => {
+
+        // Мокаем fetch для возвращения тестовых данных
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                status: 500,
+            })
+        ) as jest.Mock;
+
+        const url = 'http://example.com/api/plugins';
+        const body = { name: 'text' };
+        await expect(httpService.post(url, body)).rejects.toThrow(`POST запрос на ${url} не удался со статусом 500`);
+    });
 });
