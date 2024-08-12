@@ -114,4 +114,21 @@ describe('PluginManager', () => {
         expect(mockIoCRegister).toHaveBeenCalled();
         expect(PluginManager.getPluginsNameList()).toContain('Byeman');
     });
+
+    // Негативный тест для функции registerPlugins
+    test('registerPlugins вызывает ошибку при неудачной регистрации плагина', async () => {
+        // Мокаем loadPlugin чтобы он вызывал ошибку
+        jest.spyOn(PluginManager, 'loadPlugin').mockImplementationOnce(async () => {
+            throw new Error('Ошибка загрузки плагина');
+        });
+
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+        const pluginsData = { plugins: [{ name: 'Text', parametrs: ['Test'] }] };
+        await PluginManager.registerPlugins(pluginsData);
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Ошибка регистрации плагина Text: Error: Ошибка загрузки плагина'));
+
+        consoleErrorSpy.mockRestore();
+    });
 });
