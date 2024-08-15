@@ -1,0 +1,14 @@
+{
+    "name": "auth-service",
+    "version": "1.0.0",
+    "description": "Сервис для аутентификации и авторизации",
+    "main": "authServer.js",
+    "dependencies": {
+      "body-parser": "^1.20.2",
+      "express": "^4.19.2"
+    },
+    "type": "module",
+    "scripts": {
+      "start": "node authServer.js"
+    }
+  }
