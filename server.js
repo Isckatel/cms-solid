@@ -2,6 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import axios from 'axios';
 import { fileURLToPath } from 'url';
 
 // Получение пути к текущему файлу и директории
@@ -17,6 +18,19 @@ app.use(bodyParser.json());
 
 // Обслуживание статических файлов из директории "publish"
 app.use(express.static(path.join(__dirname, 'publish')));
+
+
+app.post('/api/login', async (req, res) => {
+    try {
+      const response = await axios.post('http://localhost:3001/login', {
+        username: req.body.username,
+        password: req.body.password,
+      });
+      res.json(response.data);
+    } catch (error) {
+      res.status(401).json({ message: 'Неверные учетные данные' });
+    }
+  });
 
 // Получение информации о плагинах
 app.get('/api/plugins', (req, res) => {
