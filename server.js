@@ -2,6 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import axios from 'axios';
 import { fileURLToPath } from 'url';
 
@@ -16,9 +17,42 @@ const PLUGIN_REGISTRY_PATH = path.join(__dirname, 'publish', 'plugin-registry.js
 // Middleware для парсинга JSON
 app.use(bodyParser.json());
 
+// Middleware для парсинга куки
+app.use(cookieParser());
+
+// Middleware для проверки токена
+const authenticate = async (req, res, next) => {
+    const token = req.cookies.authorization;
+    try {
+      await axios.post('http://localhost:3001/verify', {}, {
+        headers: { 'authorization': token },
+      });
+      console.log('Прошла верификация')
+      next();
+    } catch (error) {
+        console.log('Верификация не прошла')
+        res.redirect('/login.html')
+    }
+};
+
+// Редирект на авторизацию при доступе к admin.html
+app.get('/admin.html', authenticate, (req, res) => {
+    res.sendFile(path.join(__dirname, '/publish/admin.html'));
+});
+
+// Сохранение информации о плагинах
+app.post('/api/plugins', authenticate, (req, res) => {
+    const pluginsData = req.body;
+    fs.writeFile(PLUGIN_REGISTRY_PATH, JSON.stringify(pluginsData, null, 2), 'utf8', (err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Ошибка записи файла' });
+        }
+        res.json({ message: 'Данные успешно сохранены' });
+    });
+});
+
 // Обслуживание статических файлов из директории "publish"
 app.use(express.static(path.join(__dirname, 'publish')));
-
 
 app.post('/api/login', async (req, res) => {
     try {
@@ -26,7 +60,12 @@ app.post('/api/login', async (req, res) => {
         username: req.body.username,
         password: req.body.password,
       });
-      res.json(response.data);
+      console.log(response.data);
+      res.cookie('authorization', response.data.authorization, { 
+        httpOnly: true,   // Кука не доступна через JavaScript 
+        sameSite: 'strict' // Защита от CSRF атак
+      });
+      res.send({ message: 'Успешная аутентификация' });
     } catch (error) {
       res.status(401).json({ message: 'Неверные учетные данные' });
     }
@@ -39,17 +78,6 @@ app.get('/api/plugins', (req, res) => {
             return res.status(500).json({ error: 'Ошибка чтения файла' });
         }
         res.json(JSON.parse(data));
-    });
-});
-
-// Сохранение информации о плагинах
-app.post('/api/plugins', (req, res) => {
-    const pluginsData = req.body;
-    fs.writeFile(PLUGIN_REGISTRY_PATH, JSON.stringify(pluginsData, null, 2), 'utf8', (err) => {
-        if (err) {
-            return res.status(500).json({ error: 'Ошибка записи файла' });
-        }
-        res.json({ message: 'Данные успешно сохранены' });
     });
 });
 
