@@ -24,7 +24,7 @@ app.use(cookieParser());
 const authenticate = async (req, res, next) => {
     const token = req.cookies.authorization;
     try {
-      await axios.post('http://localhost:3001/verify', {}, {
+      await axios.post('http://auth:3001/verify', {}, {
         headers: { 'authorization': token },
       });
       console.log('Прошла верификация')
@@ -56,7 +56,7 @@ app.use(express.static(path.join(__dirname, 'publish')));
 
 app.post('/api/login', async (req, res) => {
     try {
-      const response = await axios.post('http://localhost:3001/login', {
+      const response = await axios.post('http://auth:3001/login', {
         username: req.body.username,
         password: req.body.password,
       });
@@ -67,6 +67,7 @@ app.post('/api/login', async (req, res) => {
       });
       res.send({ message: 'Успешная аутентификация' });
     } catch (error) {
+      console.log(error)
       res.status(401).json({ message: 'Неверные учетные данные' });
     }
   });

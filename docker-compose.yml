@@ -6,8 +6,10 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
-    links:
+    depends_on:
       - auth
+    networks:
+      - app-network
 
   auth:
     build:
@@ -16,3 +18,9 @@ services:
       - "3001:3001"
     volumes:
       - ./auth-server:/usr/src/app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
