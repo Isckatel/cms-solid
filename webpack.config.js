@@ -1,7 +1,7 @@
 import path from 'path';
 
 const config = {
-    mode: 'development', // Устанавливаем режим разработки
+    mode: 'production', // Устанавливаем режим разработки
     entry: {
         index: './src/index.ts', // Начальная точка для основного приложения
         admin: './src/admin.ts'  // Начальная точка для административной страницы

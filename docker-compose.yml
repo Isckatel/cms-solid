@@ -4,8 +4,6 @@ services:
     build: .
     ports:
       - "3000:3000"
-    volumes:
-      - .:/usr/src/app
     depends_on:
       - auth
     networks:
@@ -16,8 +14,6 @@ services:
       context: ./auth-server
     ports:
       - "3001:3001"
-    volumes:
-      - ./auth-server:/usr/src/app
     networks:
       - app-network
 
